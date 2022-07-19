@@ -56,9 +56,11 @@ class ContactService
                         'contact' => $data['contact'][$i],
                     ];
 
-                    if ($contacts[$i]) {
-                        $contacts[$i]->fill($contactToInsert);
-                        $contacts[$i]->save();
+                    $contact = $contacts->where('type', $data['contact_type'][$i])->first();
+
+                    if ($contact) {
+                        $contact->fill($contactToInsert);
+                        $contact->save();
                     } else {
                         $contact = new Contact();
                         $contact->fill($contactToInsert);

@@ -58,7 +58,7 @@
 
                 <x-field-group colSize="3">
                     <x-input name="born_date" class="date required" placeholder="DD/MM/AAAA" disabled="{{isset($visualize)}}"
-                            label="Data de Nascimento" icon="bi bi-calendar-fill" value="{{$people->born_date ?? ''}}"/>
+                            label="Data de Nascimento" icon="bi bi-calendar-fill" value="{{$people->birth_date ?? ''}}"/>
                 </x-field-group>
 
             </fieldset>
@@ -72,8 +72,8 @@
 
                 <x-field-group colSize="5">
                     <x-select name="gender" class="required" label="Sexo" icon="bi bi-gender-ambiguous" disabled="{{isset($visualize)}}">
-                        <option value="masculino" {{isset($people) && $people->gender == "Masculino" ? 'selected' : ''}}>Masculino</option>
-                        <option value="feminino" {{isset($people) && $people->gender == "Feminino" ? 'selected' : ''}}>Feminino</option>
+                        <option value="masculino" {{isset($people) && $people->gender == "masculino" ? 'selected' : ''}}>Masculino</option>
+                        <option value="feminino" {{isset($people) && $people->gender == "feminino" ? 'selected' : ''}}>Feminino</option>
                     </x-select>
                 </x-field-group>
 
@@ -84,7 +84,7 @@
                 <x-field-group>
                     <x-select name="skin_color" class="required" label="Raça/Cor" icon="bi bi-person-fill" disabled="{{isset($visualize)}}">
                         @foreach ($skinColors as $skinColor)
-                            <option value="{{$skinColor->description}}" {{isset($people) && $people->skinColor == $skinColor->description ? 'selected' : ''}}>{{$skinColor->description}}</option>
+                            <option value="{{$skinColor->description}}" {{isset($people) && $people->skin_color == $skinColor->description ? 'selected' : ''}}>{{$skinColor->description}}</option>
                         @endforeach
                     </x-select>
                 </x-field-group>
@@ -105,26 +105,25 @@
             </fieldset>
 
             <fieldset class="row">
-
                 <x-field-group>
                     <x-input name="contact[]" type="email" placeholder="Digite o Email" disabled="{{isset($visualize)}}"
                             label="Email" icon="bi bi-envelope-fill"
-                            value="{{isset($people) && isset($people->contacts[0]) ? $people->contacts[0]->type == 'E-mail' ? $people->contacts[0]->contact : '' : ''}}"/>
-                    <input class="visually-hidden" type="hidden" name="contact_type[]" value="E-mail">
+                            value="{{isset($people) && isset($people->contacts) && $people->getEmailAttribute() ? $people->getEmailAttribute()->contact : ''}}"/>
+                    <input class="visually-hidden" type="hidden" name="contact_type[]" value="0">
                 </x-field-group>
 
                 <x-field-group>
                     <x-input name="contact[]" class="phone" placeholder="Digite o Número" disabled="{{isset($visualize)}}"
                             label="Telefone Residencial" icon="bi bi-telephone-fill"
-                            value="{{isset($people) && isset($people->contacts[1]) ? $people->contacts[1]->type == 'Telefone' ? $people->contacts[1]->contact : '' : ''}}"/>
-                    <input class="visually-hidden" type="hidden" name="contact_type[]" value="Telefone">
+                            value="{{isset($people) && isset($people->contacts) && $people->getPhoneAttribute() ? $people->getPhoneAttribute()->contact : ''}}"/>
+                    <input class="visually-hidden" type="hidden" name="contact_type[]" value="1">
                 </x-field-group>
 
                 <x-field-group>
                     <x-input name="contact[]" class="phone" placeholder="Digite o Número" disabled="{{isset($visualize)}}"
                             label="Telefone Celular" icon="bi bi-phone-fill"
-                            value="{{isset($people) && isset($people->contacts[2]) ? $people->contacts[2]->type == 'Celular' ? $people->contacts[2]->contact : '' : ''}}"/>
-                    <input class="visually-hidden" type="hidden" name="contact_type[]" value="Celular">
+                            value="{{isset($people) && isset($people->contacts) && $people->getCellPhoneAttribute() ? $people->getCellPhoneAttribute()->contact : ''}}"/>
+                    <input class="visually-hidden" type="hidden" name="contact_type[]" value="2">
                 </x-field-group>
 
             </fieldset>

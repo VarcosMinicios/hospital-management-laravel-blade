@@ -104,7 +104,7 @@ function setMask(input, inputClass) {
     }
 
     if (inputClass == 'cns') {
-        $(input).mask('000.0000.0000.000');
+        $(input).mask('000.0000.0000.0000');
     }
 }
 

@@ -39,7 +39,7 @@ class PeopleController extends Controller
     {
         $result = $this->servicePrimary->store($request->all());
 
-        return $result['type'] == 'success' ? redirect()->route('patient.index')->with(['success' => $result['msg']]) : redirect()->back()->with(['error' => $result['msg']]);
+        return $result['type'] == 'success' ? redirect()->route('people.index')->with(['success' => $result['msg']]) : redirect()->back()->with(['error' => $result['msg']]);
     }
 
     public function show($id)
@@ -56,7 +56,7 @@ class PeopleController extends Controller
     {
         $result = $this->servicePrimary->update($request->all(), $id);
 
-        return $result['type'] == 'success' ? redirect()->route('patient.index')->with(['success' => $result['msg']]) : redirect()->back()->with(['error' => $result['msg']]);
+        return $result['type'] == 'success' ? redirect()->route('people.index')->with(['success' => $result['msg']]) : redirect()->back()->with(['error' => $result['msg']]);
     }
 
     public function destroy($id)

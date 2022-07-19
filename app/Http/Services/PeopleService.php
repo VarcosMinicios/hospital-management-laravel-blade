@@ -28,7 +28,7 @@ class PeopleService
         return People::select(
             'people.id',
             'people.mother_name',
-            DB::raw("DATE_FORMAT(people.birth_date, '%d/%m/%Y') as birth_date"),
+            'people.birth_date',
             'people.name'
         );
     }

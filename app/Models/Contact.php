@@ -14,4 +14,9 @@ class Contact extends Model
         'contact',
         'type'
     ];
+
+    public function people()
+    {
+        return $this->belongsTo(People::class);
+    }
 }
