@@ -21,12 +21,12 @@ class AddressFactory extends Factory
         return [
             'cep' => $this->faker->randomNumber(8),
             'street_type' => $this->faker->randomElement(['Rua', 'Avenida', 'Travessa', 'Praça', 'Alameda']),
-            'street' => $this->faker->word(),
+            'street' => $this->faker->streetName(),
             'number' => $this->faker->randomNumber(4),
             'state' => State::inRandomOrder()->first()->abbreviation,
             'city' => $this->faker->city,
             'neighborhood' => $this->faker->word(),
-            'ibge' => $this->faker->randomNumber(7),
+            'ibge' => $this->faker->randomNumber(7, true),
             'reference' => $this->faker->text(50),
             'complement' => $this->faker->text(50)
         ];

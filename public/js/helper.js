@@ -24,23 +24,41 @@ function loadModal(button) {
 function axiosDelete(button) {
     let url = button.getAttribute('data-url');
 
-    axios.delete(url)
-        .then(({data}) => {
-            Swal.fire({
-                title: data.title,
-                text: data.msg,
-                icon: data.type,
-                confirmButtonText: 'OK'
+    Swal.fire({
+        title: 'Deseja excluir esta pessoa?',
+        text: "Você não poderá reverter isso!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sim, apague isso!'
+    }).then(() => {
+        axios.delete(url)
+            .then(({data}) => {
+                Swal.fire({
+                    title: data.title,
+                    text: data.msg,
+                    icon: data.type,
+                    confirmButtonText: 'OK'
+                });
+
+                if (data.type == 'success') {
+                    searchRenderTable();
+                }
+
+            }).catch(() => {
+                Swal.fire({
+                    title: 'Erro!',
+                    text: `Ocorreu um erro ao executar a operação. Tente novamente mais tarde ou entre em contato`,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
             });
-
-            if (data.type == 'success') {
-                searchRenderTable();
-            }
-
-        }).catch(() => {
-
-        });
+        },
+        () => {}
+    );
 }
+
 
 function searchRenderTable(data = '') {
     //TODO: Refactor to not destroy all table, just the content
@@ -153,10 +171,8 @@ function axiosPost(form) {
                         } else {
                             searchRenderTable();
                             let divModal = document.getElementById('modal');
-                            let modal = new bootstrap.Modal(divModal.firstChild);
-                            modal.dispose();
-                            document.getElementsByClassName('modal-backdrop').remove();
-                            // divModal.innerHTML = '';
+                            let modal = bootstrap.Modal.getInstance(divModal.firstChild);
+                            modal.hide();
                         }
                     },
                     () => {}

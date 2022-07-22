@@ -18,7 +18,9 @@
                 <td x-data="{}">
                     <a data-url="{{route("$prefix.show", $item['id'])}}" x-on:click="loadModal($el)" class="btn btn-sm btn-primary"><i class="bi bi-eye"></i></a>
                     <a data-url="{{route("$prefix.edit", $item['id'])}}" x-on:click="loadModal($el)" class="btn btn-sm btn-primary"><i class="bi bi-pencil-square"></i></a>
-                    <a data-url="{{route("$prefix.destroy", $item['id'])}}" x-on:click="axiosDelete($el)" class="btn btn-sm btn-danger"><i class="bi bi-x-square"></i></a>
+                    @if(Route::has("$prefix.destroy"))
+                        <a data-url="{{route("$prefix.destroy", $item['id'])}}" x-on:click="axiosDelete($el)" class="btn btn-sm btn-danger"><i class="bi bi-x-square"></i></a>
+                    @endif
                 </td>
             </tr>
         @endforeach

@@ -14,4 +14,9 @@ class Nurse extends Model
         'professional_id',
         'coren'
     ];
+
+    public function professional()
+    {
+        return $this->belongsTo(Professional::class);
+    }
 }

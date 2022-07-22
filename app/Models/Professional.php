@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -9,6 +10,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Professional extends Model
 {
     use HasFactory, SoftDeletes;
+
+    protected $appends = ['name'];
 
     protected $fillable = [
         'people_id',
@@ -18,4 +21,14 @@ class Professional extends Model
         'admission_date',
         'departure_date'
     ];
+
+    protected function name(): Attribute
+    {
+        return new Attribute(get: fn () => $this->people->name);
+    }
+
+    public function people()
+    {
+        return $this->belongsTo(People::class);
+    }
 }

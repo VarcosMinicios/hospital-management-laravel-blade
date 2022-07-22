@@ -25,7 +25,7 @@ class PeopleFactory extends Factory
             'name' => $this->faker->name(),
             'rg' => $this->faker->randomNumber(8),
             'cns' => $this->faker->randomNumber(9, true) . $this->faker->randomNumber(6, true),
-            'birth_date' => $this->faker->date('Y-m-d'),
+            'birth_date' => $this->faker->date('d/m/Y'),
             'mother_name' => $this->faker->name('female'),
             'father_name' => $this->faker->name('male'),
             'unknown_father' => false,
@@ -47,5 +47,7 @@ class PeopleFactory extends Factory
         Contact::factory()->create([
             'people_id' => $id
         ]);
+
+        return $id;
     }
 }

@@ -16,7 +16,7 @@
                 <section class="m-3">
 
                     <form id="register_reception_form" data-type="post" autocomplete="off" data-dependency="false" {{isset($reception)  && !isset($visualize) || !isset($visualize) ? 'method=POST' : ''}}
-                        data-route="{{isset($reception) && !isset($visualize) ? route('reception.update', $reception->patient->id) : route('reception.store')}}" >
+                        data-route="{{isset($reception) && !isset($visualize) ? route('reception.update', $reception->id) : route('reception.store')}}" >
 
                         @csrf
 
@@ -28,19 +28,19 @@
 
                             <x-field-group>
                                 <x-input name="cpf" class="cpf required" x-on:input="getPatient($el)" placeholder="Digite o CPF" disabled="{{isset($visualize)}}"
-                                        label="CPF" icon="bi bi-credit-card-fill" data-url="{{route('patient.getPatient')}}" value="{{$reception->patient->physicalPerson->cpf ?? ''}}"/>
+                                        label="CPF" icon="bi bi-credit-card-fill" data-url="{{route('people.getPatient')}}" value="{{$reception->people->cpf ?? ''}}"/>
                             </x-field-group>
 
-                            <input type="hidden" id="patient_id" name="patient_id" value="{{$reception->patient_id ?? ''}}">
+                            <input type="hidden" id="patient_id" name="patient_id" value="{{$reception->people ?? ''}}">
 
                             <x-field-group>
                                 <x-input name="cns" class="cns" placeholder="Digite o CNS" disabled="{{isset($visualize)}}"
-                                        label="CNS" icon="bi bi-credit-card-fill" value="{{$reception->patient->physicalPerson->cns ?? ''}}"/>
+                                        label="CNS" icon="bi bi-credit-card-fill" value="{{$reception->people->cns ?? ''}}"/>
                             </x-field-group>
 
                             <x-field-group>
                                 <x-input name="chart" class="required" placeholder="Prontuário" disabled="{{isset($visualize)}}"
-                                        label="Prontuário" icon="bi bi-credit-card-fill" value="{{$reception->patient->chart ?? ''}}"/>
+                                        label="Prontuário" icon="bi bi-credit-card-fill" value="{{$reception->chart ?? ''}}"/>
                             </x-field-group>
 
                         </fieldset>
@@ -49,12 +49,12 @@
 
                             <x-field-group>
                                 <x-input name="name" class="required" placeholder="Digite o nome do paciente" disabled="{{isset($visualize)}}"
-                                        label="Nome" icon="bi bi-person-fill" value="{{$reception->patient->physicalPerson->people->name ?? ''}}"/>
+                                        label="Nome" icon="bi bi-person-fill" value="{{$reception->people->name ?? ''}}"/>
                             </x-field-group>
 
                             <x-field-group>
                                 <x-input name="mother_name" class="required" placeholder="Digite o nome da mãe do paciente" disabled="{{isset($visualize)}}"
-                                        label="Nome da Mãe" icon="bi bi-person-fill" value="{{$reception->patient->physicalPerson->mother_name ?? ''}}"/>
+                                        label="Nome da Mãe" icon="bi bi-person-fill" value="{{$reception->people->mother_name ?? ''}}"/>
                             </x-field-group>
 
                         </fieldset>
@@ -64,23 +64,15 @@
                             <x-field-group>
                                 <x-select name="professional_id" class="required" label="Profissional" icon="bi bi-globe2" disabled="{{isset($visualize)}}">
                                     @foreach ($professionals as $professional)
-                                        <option value="{{$professional->id}}" {{isset($reception) && $reception->professional_id == $professional->id ? 'selected' : ''}}>{{$professional->physicalPerson->people->name}}</option>
+                                        <option value="{{$professional->id}}" {{isset($reception) && $reception->professional_id == $professional->id ? 'selected' : ''}}>{{$professional->name}}</option>
                                     @endforeach
                                 </x-select>
                             </x-field-group>
 
                             <x-field-group>
                                 <x-select name="doctor_id" class="required" label="Médico Assistente" icon="bi bi-globe2" disabled="{{isset($visualize)}}">
-                                    @foreach ($professionals as $professional)
-                                        <option value="{{$professional->id}}" {{isset($reception) && $reception->doctor_id == $professional->id ? 'selected' : ''}}>{{$professional->physicalPerson->people->name}}</option>
-                                    @endforeach
-                                </x-select>
-                            </x-field-group>
-
-                            <x-field-group>
-                                <x-select name="health_insurance_id" label="Convênio" icon="bi bi-globe2" disabled="{{isset($visualize)}}">
-                                    @foreach ($healthInsurances as $healthInsurance)
-                                        <option value="{{$healthInsurance->id}}" {{isset($reception) && $reception->health_insurance_id == $healthInsurance->id ? 'selected' : ''}}>{{$healthInsurance->name}}</option>
+                                    @foreach ($doctors as $doctor)
+                                        <option value="{{$doctor->id}}" {{isset($reception) && $reception->doctor_id == $doctor->id ? 'selected' : ''}}>{{$doctor->name}}</option>
                                     @endforeach
                                 </x-select>
                             </x-field-group>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PeopleController;
+use App\Http\Controllers\ReceptionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,4 +31,17 @@ Route::prefix('people')
         Route::get('/edit/{id}', 'edit')->name('people.edit');
         Route::put('/update/{id}', 'update')->name('people.update');
         Route::delete('/destroy/{id}', 'destroy')->name('people.destroy');
+});
+
+Route::prefix('reception')
+    ->controller(ReceptionController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('reception.index');
+        Route::get('/search', 'search')->name('reception.search');
+        Route::get('/get-patient', 'getPatient')->name('reception.getPatient');
+        Route::get('/register', 'create')->name('reception.create');
+        Route::post('/register', 'store')->name('reception.store');
+        Route::get('/visualize/{id}', 'show')->name('reception.show');
+        Route::get('/edit/{id}', 'edit')->name('reception.edit');
+        Route::put('/update/{id}', 'update')->name('reception.update');
 });
