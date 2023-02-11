@@ -11,42 +11,48 @@ class Reception extends Model
 {
     use HasFactory;
 
-    protected $appends = ['chart', 'professional_name', 'doctor_name', 'people_name'];
+    protected $appends = ['chart'];
 
     protected $fillable = [
-        'people_id',
+        'patient_id',
         'professional_id',
         'doctor_id',
         'nurse_id',
         'admission_date',
         'diagnosis',
         'dependency',
-        'clinic'
+        'clinic',
+        'security_deposit'
     ];
 
-    protected function peopleName(): Attribute
-    {
-        return new Attribute(get: fn () => $this->people->name);
-    }
+    // protected function peopleName(): Attribute
+    // {
+    //     return new Attribute(get: fn () => $this->people->name);
+    // }
 
-    protected function doctorName(): Attribute
-    {
-        return new Attribute(get: fn () => $this->doctor->professional->people->name);
-    }
+    // protected function doctorName(): Attribute
+    // {
+    //     return new Attribute(get: fn () => $this->doctor->professional->people->name);
+    // }
 
-    protected function nurseName(): Attribute
-    {
-        return new Attribute(get: fn () => $this->nurse->professional->people->name);
-    }
+    // protected function nurseName(): Attribute
+    // {
+    //     return new Attribute(get: fn () => $this->nurse->professional->people->name);
+    // }
 
-    protected function professionalName(): Attribute
-    {
-        return new Attribute(get: fn () => $this->professional->people->name);
-    }
+    // // protected function professionalName(): Attribute
+    // // {
+    // //     return new Attribute(get: fn () => $this->professional->people->name);
+    // // }
 
     protected function chart(): Attribute
     {
-        return new Attribute(get: fn () => str_pad($this->attributes['id'], 8, "0", STR_PAD_LEFT));
+        return new Attribute(get: fn () => str_pad($this->id, 8, "0", STR_PAD_LEFT));
+    }
+
+    public static function getChart(): string
+    {
+        return str_pad(self::latest('id')->first()->id + 1 ?? '', 8, "0", STR_PAD_LEFT);
     }
 
     public static function getClinics()
@@ -78,9 +84,9 @@ class Reception extends Model
         );
     }
 
-    public function people()
+    public function patient()
     {
-        return $this->belongsTo(People::class);
+        return $this->belongsTo(Patient::class);
     }
 
     public function professional()

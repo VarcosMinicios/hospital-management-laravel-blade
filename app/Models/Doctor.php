@@ -11,18 +11,11 @@ class Doctor extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $appends = ['name'];
-
     protected $fillable = [
         'professional_id',
         'crm',
         'specialty'
     ];
-
-    protected function name(): Attribute
-    {
-        return new Attribute(get: fn () => $this->professional->people->name);
-    }
 
     public function professional()
     {

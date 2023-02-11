@@ -22,7 +22,6 @@ class PeopleFactory extends Factory
     {
         return [
             'cpf' => $this->faker->randomNumber(9, true) . $this->faker->randomNumber(2, true),
-            'name' => $this->faker->name(),
             'rg' => $this->faker->randomNumber(8),
             'cns' => $this->faker->randomNumber(9, true) . $this->faker->randomNumber(6, true),
             'birth_date' => $this->faker->date('d/m/Y'),

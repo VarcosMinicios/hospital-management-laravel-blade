@@ -80,9 +80,4 @@ class ContactService
             return ['msg' => 'Erro ao atualizar contatos', 'type' => 'error', 'error' => $e->getMessage()];
         }
     }
-
-    public function destroy($id)
-    {
-        //
-    }
 }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->increments('id');
             $table->unsignedInteger('people_id');
             $table->foreign('people_id')->references('id')->on('people');
+            $table->string('name', 100);
             $table->string('schedule', 13);
             $table->string('scale', 7);
             $table->string('sector', 25);
@@ -24,7 +25,7 @@ return new class extends Migration
             $table->date('departure_date')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->index(['people_id', 'schedule', 'sector', 'admission_date']);
+            $table->index(['people_id', 'sector', 'admission_date', 'name']);
         });
     }
 

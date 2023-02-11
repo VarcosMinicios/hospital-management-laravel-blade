@@ -12,7 +12,7 @@
     <x-field-group>
         <x-select name="state" label="Estado" class="required" icon="bi bi-flag-fill" disabled="{{isset($visualize)}}">
             @foreach ($states as $state)
-            <option value="{{$state->abbreviation}}" {{isset($people) && $people->address->state == $state->abbreviation ? 'selected' : ''}}>{{$state->name}}</option>
+            <option value="{{$state->abbreviation}}" {{isset($people) && $people && $people->address->state == $state->abbreviation ? 'selected' : ''}}>{{$state->name}}</option>
             @endforeach
         </x-select>
     </x-field-group>

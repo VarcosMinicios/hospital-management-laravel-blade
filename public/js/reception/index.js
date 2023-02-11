@@ -7,7 +7,7 @@ function getPatient(input) {
                 data = data[0];
                 document.getElementById('patient_id').value = data.id;
                 document.getElementById('cns').value = data.cns ? data.cns : '';
-                document.getElementById('chart').value = data.chart;
+                document.getElementById('chart').value = data.chart ? data.chart : '';
                 document.getElementById('name').value = data.name;
                 document.getElementById('mother_name').value = data.mother_name;
             }).catch(() => {

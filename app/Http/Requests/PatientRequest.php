@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PeopleRequest extends FormRequest
+class PatientRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class PeopleRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -28,9 +28,9 @@ class PeopleRequest extends FormRequest
         return [
             'name' => 'required|string|max:100',
             'rg' => 'string|max:20|nullable',
-            'cpf' => 'required|string|max:11|unique:people,cpf,' . $id,
-            'born_date' => 'required|date_format:d/m/Y',
-            'cns' => 'string|max:15|nullable',
+            'cpf' => 'required|string|max:14|unique:people,cpf,' . $id,
+            'birth_date' => 'required|date_format:d/m/Y',
+            'cns' => 'string|max:18|nullable',
             'father_name' => 'required_if:father_unknow,|string|max:100|nullable',
             'mother_name' => 'required|string|max:100',
             'father_unknow' => 'required_if:father_name,==,',
@@ -41,8 +41,8 @@ class PeopleRequest extends FormRequest
             'cep' => 'required|string|max:9',
             'state' => 'required|string|exists:states,abbreviation',
             'city' => 'required|string|max:50',
-            'district' => 'required|string|max:60',
-            'type' => 'required|string|max:60',
+            'neighborhood' => 'required|string|max:60',
+            'street_type' => 'required|string|max:60',
             'street' => 'required|string|max:70',
             'number' => 'required|numeric',
             'complement' => 'string|max:50|nullable',

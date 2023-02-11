@@ -28,3 +28,34 @@
     <tfoot>
     </tfoot>
 </table>
+
+<div class="row">
+
+    <div class="col-md-2">
+        <span>Exibindo {{$length}} de {{$totalRecords}}</span>
+    </div>
+
+    <div class="col offset-md-7">
+        <nav>
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" role="button" aria-label="Previous">
+                        <span>&laquo;</span>
+                    </a>
+                </li>
+
+                @for ($i = 1; $i <= 5; $i++)
+                    <li class="page-item">
+                        <a class="page-link" role="button" x-on:click='pagination($el)'>{{$i}}</a>
+                    </li>
+                @endfor
+
+                <li class="page-item">
+                    <a class="page-link" role="button" aria-label="Next">
+                    <span>&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

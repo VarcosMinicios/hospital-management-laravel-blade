@@ -6,9 +6,9 @@ use App\Models\People;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Contact>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Patient>
  */
-class ContactFactory extends Factory
+class PatientFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,8 +18,8 @@ class ContactFactory extends Factory
     public function definition()
     {
         return [
-            'contact' => $this->faker->phoneNumber,
-            'type' => $this->faker->numberBetween(0, 2)
+            'people_id' => People::factory()->createPeople(),
+            'name' => $this->faker->name()
         ];
     }
 }

@@ -13,14 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('contacts', function (Blueprint $table) {
+        Schema::create('patients', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('people_id');
             $table->foreign('people_id')->references('id')->on('people');
-            $table->string('contact', 50);
-            $table->tinyInteger('type');
+            $table->string('name', 100);
             $table->timestamps();
-            $table->index(['people_id']);
+            $table->softDeletes();
+            $table->index(['people_id', 'name']);
         });
     }
 
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('contacts');
+        Schema::dropIfExists('patients');
     }
 };

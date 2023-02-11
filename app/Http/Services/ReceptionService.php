@@ -11,11 +11,11 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
-class ReceptionService
+class ReceptionService extends Service
 {
 
-    private array $columns = [
-        'people_name' => 'Nome',
+    protected array $columns = [
+        'patient_name' => 'Nome',
         'clinic' => 'Clínica de Internação',
         'professional_name' => 'Profissional',
         'doctor_name' => 'Médico',
@@ -26,35 +26,35 @@ class ReceptionService
     {
         return Reception::select(
             'receptions.id',
-            'receptions.people_id',
-            'receptions.professional_id',
-            'receptions.doctor_id',
+            'patients.name as patient_name',
+            'professionals.name as professional_name',
+            'p_doctors.name as doctor_name',
             'receptions.clinic',
             'receptions.admission_date'
-        );
+        )
+            ->join('patients', 'patients.id', 'receptions.patient_id')
+            ->join('professionals', 'professionals.id', 'receptions.professional_id')
+            ->join('doctors', 'doctors.id', 'receptions.doctor_id')
+            ->join('professionals as p_doctors', 'p_doctors.id', 'doctors.professional_id')
+            ->offset($this->offset)
+            ->limit($this->length);;
+    }
+
+    public function paginate(int $length): array
+    {
+        $this->length = $length;
+
+        $receptions = $this->getTable();
+
+        return $this->tableReturn($receptions, 'receptions');
     }
 
     public function index(): array
     {
         $receptions = $this->getTable();
 
-        return [
-            'data' => $receptions->get()->toArray(),
-            'columns' => $this->columns,
-            'prefix' => 'reception'
-        ];
-    }
+        return $this->tableReturn($receptions, 'receptions');
 
-
-    public function create(): array
-    {
-        return [
-            'professionals' => Professional::select('id', 'people_id')->get(),
-            'clinics' => Reception::getClinics(),
-            'dependencies' => Reception::getDependencies(),
-            'doctors' => Doctor::all(),
-            'nurses' => Nurse::all()
-        ];
     }
 
     public function search($search): array
@@ -67,20 +67,33 @@ class ReceptionService
             }
 
             if (is_numeric($search)) {
-                $receptions = $receptions->where('patients.chart', (int) $search);
+                $receptions = $receptions->where('receptions.chart', (int) $search);
             }
 
             if (is_string($search)) {
                 $receptions = $receptions->where('receptions.clinic', 'like', "%$search%")
-                                    ->orWhere('people.name', 'like', "%$search%");
+                                    ->orWhere('patients.name', 'like', "%$search%");
             }
         }
 
+        return $this->tableReturn($receptions, 'receptions');
+    }
+
+    public function create(): array
+    {
+        $professionals = Professional::select('professionals.id', 'name')
+            ->leftJoin('doctors', 'doctors.professional_id', 'professionals.id')
+            ->leftJoin('nurses', 'nurses.professional_id', 'professionals.id')
+            ->whereNull('doctors.id')
+            ->whereNull('nurses.id')
+            ->get();
+
         return [
-            'data' => $receptions->get()->toArray(),
-            'columns' => $this->columns,
-            'url' => route('reception.search'),
-            'prefix' => 'reception'
+            'professionals' => $professionals,
+            'clinics' => Reception::getClinics(),
+            'dependencies' => Reception::getDependencies(),
+            'doctors' => Doctor::with('professional')->get(),
+            'nurses' => Nurse::with('professional')->get()
         ];
     }
 
@@ -96,7 +109,7 @@ class ReceptionService
 
             DB::commit();
 
-            return ['title' => 'Sucesso!', 'msg' => 'Sucesso ao cadastrar recepção', 'type' => 'success', 'route' => route('reception.index')];
+            return ['title' => 'Sucesso!', 'msg' => 'Sucesso ao cadastrar recepção', 'type' => 'success', 'route' => route('receptions.index')];
 
         } catch (Exception $e) {
 
@@ -136,7 +149,7 @@ class ReceptionService
 
             DB::commit();
 
-            return ['title' => 'Sucesso!', 'msg' => 'Sucesso ao atualizar recepção', 'type' => 'success', 'route' => route('reception.index')];
+            return ['title' => 'Sucesso!', 'msg' => 'Sucesso ao atualizar recepção', 'type' => 'success', 'route' => route('receptions.index')];
 
         } catch (Exception $e) {
 

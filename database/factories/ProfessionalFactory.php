@@ -19,6 +19,7 @@ class ProfessionalFactory extends Factory
     {
         return [
             'people_id' => People::factory()->createPeople(),
+            'name' => $this->faker->name(),
             'schedule' => $this->faker->randomElement(['12x36hrs', '20hrs', '40hrs']),
             'scale' => $this->faker->randomElement(['Mensal', 'Plantão']),
             'sector' => $this->faker->word(),

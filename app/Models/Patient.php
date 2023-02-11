@@ -6,23 +6,15 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class People extends Model
+class Patient extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'cpf',
-        'rg',
-        'cns',
-        'birth_date',
-        'mother_name',
-        'father_name',
-        'unknown_father',
-        'gender',
-        'nationality',
-        'skin_color',
-        'profession'
+        'people_id',
+        'name'
     ];
 
     protected function cpf(): Attribute
@@ -49,29 +41,8 @@ class People extends Model
         );
     }
 
-    public function address()
+    public function people()
     {
-        return $this->hasOne(Address::class);
+        return $this->belongsTo(People::class);
     }
-
-    public function contacts()
-    {
-        return $this->hasMany(Contact::class);
-    }
-
-    public function getEmailAttribute()
-    {
-        return $this->contacts->where('type', 0)->first();
-    }
-
-    public function getPhoneAttribute()
-    {
-        return $this->contacts->where('type', 1)->first();
-    }
-
-    public function getCellPhoneAttribute()
-    {
-        return $this->contacts->where('type', 2)->first();
-    }
-
 }

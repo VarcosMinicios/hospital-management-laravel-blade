@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\PeopleController;
+use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ReceptionController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,32 +16,34 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('app.people.index');
+    return view('app.patients.index');
 });
 
-Route::prefix('people')
-    ->controller(PeopleController::class)
+Route::prefix('patients')
+    ->controller(PatientController::class)
     ->group(function () {
-        Route::get('/', 'index')->name('people.index');
-        Route::get('/search', 'search')->name('people.search');
-        Route::get('/get-patient', 'getPatient')->name('people.getPatient');
-        Route::get('/register', 'create')->name('people.create');
-        Route::post('/register', 'store')->name('people.store');
-        Route::get('/visualize/{id}', 'show')->name('people.show');
-        Route::get('/edit/{id}', 'edit')->name('people.edit');
-        Route::put('/update/{id}', 'update')->name('people.update');
-        Route::delete('/destroy/{id}', 'destroy')->name('people.destroy');
+        Route::get('/', 'index')->name('patients.index');
+        Route::get('/search', 'search')->name('patients.search');
+        Route::get('/pagination/{length?}', 'paginate')->name('patients.paginate');
+        Route::get('/get-patient', 'getPatient')->name('patients.getPatient');
+        Route::get('/register', 'create')->name('patients.create');
+        Route::post('/register', 'store')->name('patients.store');
+        Route::get('/visualize/{id}', 'show')->name('patients.show');
+        Route::get('/edit/{id}', 'edit')->name('patients.edit');
+        Route::put('/update/{id}', 'update')->name('patients.update');
+        Route::delete('/destroy/{id}', 'destroy')->name('patients.destroy');
 });
 
-Route::prefix('reception')
+Route::prefix('receptions')
     ->controller(ReceptionController::class)
     ->group(function () {
-        Route::get('/', 'index')->name('reception.index');
-        Route::get('/search', 'search')->name('reception.search');
-        Route::get('/get-patient', 'getPatient')->name('reception.getPatient');
-        Route::get('/register', 'create')->name('reception.create');
-        Route::post('/register', 'store')->name('reception.store');
-        Route::get('/visualize/{id}', 'show')->name('reception.show');
-        Route::get('/edit/{id}', 'edit')->name('reception.edit');
-        Route::put('/update/{id}', 'update')->name('reception.update');
+        Route::get('/', 'index')->name('receptions.index');
+        Route::get('/search', 'search')->name('receptions.search');
+        Route::get('/get-patient', 'getPatient')->name('receptions.getPatient');
+        Route::get('/pagination/{length?}', 'paginate')->name('receptions.paginate');
+        Route::get('/register', 'create')->name('receptions.create');
+        Route::post('/register', 'store')->name('receptions.store');
+        Route::get('/visualize/{id}', 'show')->name('receptions.show');
+        Route::get('/edit/{id}', 'edit')->name('receptions.edit');
+        Route::put('/update/{id}', 'update')->name('receptions.update');
 });

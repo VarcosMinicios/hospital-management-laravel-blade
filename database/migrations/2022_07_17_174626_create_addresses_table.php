@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('reference', 50)->nullable();
             $table->string('complement', 50)->nullable();
             $table->timestamps();
-            $table->index(['cep', 'street', 'state', 'city']);
+            $table->index(['cep', 'people_id', 'street', 'state', 'city']);
         });
     }
 

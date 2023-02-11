@@ -1,3 +1,11 @@
+<div data-backdrop="static" class="div-loading-table" id="div-loading-table" style="display: none">
+    <div class="d-flex justify-content-center span-loading">
+        <div class="row border border-4 rounded bg-light">
+            <span class="text-dark fw-bold fs-4">Processando</span>
+        </div>
+    </div>
+</div>
+
 <table class="table table-striped table-bordered border" data-url="{{$url}}">
     <thead>
         <tr>
@@ -26,3 +34,34 @@
     <tfoot>
     </tfoot>
 </table>
+
+<div class="row">
+
+    <div class="col-md-2">
+        <span>Exibindo {{$totalRecords > $length ? $length : $totalRecords}} de {{$totalRecords}}</span>
+    </div>
+
+    <div class="col offset-md-7">
+        <nav>
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" role="button" aria-label="Previous">
+                    <span>&laquo;</span>
+                    </a>
+                </li>
+
+                @for ($i = 1; $i <= 5; $i++)
+                    <li class="page-item">
+                        <a class="page-link" role="button" x-on:click='pagination($el)'>{{$i}}</a>
+                    </li>
+                @endfor
+
+                <li class="page-item">
+                    <a class="page-link" role="button" aria-label="Next">
+                    <span>&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

@@ -16,8 +16,7 @@ return new class extends Migration
         Schema::create('people', function (Blueprint $table) {
             $table->increments('id');
             $table->string('cpf', 11)->unique();
-            $table->string('name', 100);
-            $table->string('rg', 15);
+            $table->string('rg', 15)->nullable();
             $table->string('cns', 15)->unique();
             $table->date('birth_date');
             $table->string('mother_name', 100);
@@ -28,8 +27,7 @@ return new class extends Migration
             $table->string('skin_color', 10);
             $table->string('profession', 25);
             $table->timestamps();
-            $table->softDeletes();
-            $table->index(['cpf', 'name', 'cns', 'gender']);
+            $table->index(['cpf', 'cns', 'gender']);
         });
     }
 

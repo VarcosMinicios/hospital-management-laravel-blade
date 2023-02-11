@@ -19,8 +19,9 @@ return new class extends Migration
             $table->foreign('professional_id')->references('id')->on('professionals');
             $table->string('crm', 20);
             $table->string('specialty', 30);
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
+            $table->index('professional_id');
         });
     }
 

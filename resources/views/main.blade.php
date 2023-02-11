@@ -30,6 +30,22 @@
             justify-content: center;
             align-items: center;
         }
+
+        .div-loading-table {
+            position: absolute;
+            z-index: 99990;
+            height: 10%;
+            width: 100%;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .span-loading {
+            box-shadow: inset 0 0 2em rgba(0, 0, 0, 0.323), 0 0 2em rgba(0, 0, 0, 0.466);
+        }
     </style>
 
     <title>@yield('title')</title>
@@ -45,14 +61,14 @@
 
             <nav>
                 <ul class="nav nav-pills">
-                    <li class="nav-item"><a href="{{route('people.index')}}" class="nav-link {{$navLink == 'map' ? 'active' : ''}}" {{$navLink == 'patients' ? 'aria-current="page"' : ''}}>Mapa de Internação</a></li>
-                    <li class="nav-item"><a href="{{route('people.index')}}" class="nav-link {{$navLink == 'peoples' ? 'active' : ''}}" {{$navLink == 'peoples' ? 'aria-current="page"' : ''}}>Pessoas</a></li>
-                    <li class="nav-item"><a href="{{route('people.index')}}" class="nav-link {{$navLink == 'reception' ? 'active' : ''}}" {{$navLink == 'reception' ? 'aria-current="page"' : ''}}>Recepção</a></li>
-                    <li class="nav-item"><a href="{{route('people.index')}}" class="nav-link {{$navLink == 'attendance' ? 'active' : ''}}" {{$navLink == 'attendance' ? 'aria-current="page"' : ''}}>Atendimento</a></li>
-                    <li class="nav-item"><a href="{{route('people.index')}}" class="nav-link {{$navLink == 'appointment' ? 'active' : ''}}" {{$navLink == 'appointment' ? 'aria-current="page"' : ''}}>Consulta</a></li>
-                    <li class="nav-item"><a href="{{route('people.index')}}" class="nav-link {{$navLink == 'outpatient' ? 'active' : ''}}" {{$navLink == 'outpatient' ? 'aria-current="page"' : ''}}>Ambulatório</a></li>
-                    <li class="nav-item"><a href="{{route('people.index')}}" class="nav-link {{$navLink == 'surgery' ? 'active' : ''}}" {{$navLink == 'surgery' ? 'aria-current="page"' : ''}}>Cirurgias</a></li>
-                    <li class="nav-item"><a href="{{route('people.index')}}" class="nav-link {{$navLink == 'professionals' ? 'active' : ''}}" {{$navLink == 'professionals' ? 'aria-current="page"' : ''}}>Profissionais</a></li>
+                    <li class="nav-item"><a href="{{route('patients.index')}}" class="nav-link {{$navLink == 'map' ? 'active' : ''}}" {{$navLink == 'map' ? 'aria-current="page"' : ''}}>Mapa de Internação</a></li>
+                    <li class="nav-item"><a href="{{route('patients.index')}}" class="nav-link {{$navLink == 'patients' ? 'active' : ''}}" {{$navLink == 'patients' ? 'aria-current="page"' : ''}}>Pacientes</a></li>
+                    <li class="nav-item"><a href="{{route('receptions.index')}}" class="nav-link {{$navLink == 'reception' ? 'active' : ''}}" {{$navLink == 'reception' ? 'aria-current="page"' : ''}}>Recepção</a></li>
+                    <li class="nav-item"><a href="{{route('patients.index')}}" class="nav-link {{$navLink == 'attendance' ? 'active' : ''}}" {{$navLink == 'attendance' ? 'aria-current="page"' : ''}}>Atendimento</a></li>
+                    <li class="nav-item"><a href="{{route('patients.index')}}" class="nav-link {{$navLink == 'appointment' ? 'active' : ''}}" {{$navLink == 'appointment' ? 'aria-current="page"' : ''}}>Consulta</a></li>
+                    <li class="nav-item"><a href="{{route('patients.index')}}" class="nav-link {{$navLink == 'outpatient' ? 'active' : ''}}" {{$navLink == 'outpatient' ? 'aria-current="page"' : ''}}>Ambulatório</a></li>
+                    <li class="nav-item"><a href="{{route('patients.index')}}" class="nav-link {{$navLink == 'surgery' ? 'active' : ''}}" {{$navLink == 'surgery' ? 'aria-current="page"' : ''}}>Cirurgias</a></li>
+                    <li class="nav-item"><a href="{{route('patients.index')}}" class="nav-link {{$navLink == 'professionals' ? 'active' : ''}}" {{$navLink == 'professionals' ? 'aria-current="page"' : ''}}>Profissionais</a></li>
                 </ul>
             </nav>
 

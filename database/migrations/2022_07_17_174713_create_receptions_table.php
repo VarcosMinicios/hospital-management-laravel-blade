@@ -15,20 +15,21 @@ return new class extends Migration
     {
         Schema::create('receptions', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('people_id');
-            $table->foreign('people_id')->references('id')->on('people');
+            $table->unsignedInteger('patient_id');
+            $table->foreign('patient_id')->references('id')->on('patients');
             $table->unsignedInteger('professional_id');
             $table->foreign('professional_id')->references('id')->on('professionals');
             $table->unsignedInteger('doctor_id');
             $table->foreign('doctor_id')->references('id')->on('doctors');
-            $table->unsignedInteger('nurse_id');
+            $table->unsignedInteger('nurse_id')->nullable();
             $table->foreign('nurse_id')->references('id')->on('nurses');
             $table->date('admission_date');
-            $table->string('diagnosis', 100);
+            $table->string('diagnosis', 100)->nullable();
             $table->string('dependency', 20);
-            $table->string('clinic', 10);
+            $table->string('clinic', 12);
+            $table->integer('security_deposit')->nullable();
             $table->timestamps();
-            $table->index(['people_id', 'doctor_id', 'admission_date', 'clinic']);
+            $table->index(['patient_id', 'doctor_id', 'professional_id', 'admission_date', 'clinic'], 'patient_doctor_professional_date_clinic');
         });
     }
 

@@ -6,6 +6,7 @@ use App\Models\Address;
 use App\Models\People;
 use App\Http\Services\ContactService;
 use App\Models\Nationality;
+use App\Models\Patient;
 use App\Models\SkinColor;
 use App\Models\State;
 use Carbon\Carbon;
@@ -13,8 +14,15 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
-class PeopleService
+class PatientService extends Service
 {
+
+    protected array $columns = [
+        'name' => 'Nome',
+        'cns' => 'CNS',
+        'mother_name' => 'Nome da Mãe',
+        'birth_date' => 'Data de Nascimento'
+    ];
 
     private ContactService $contactService;
 
@@ -25,64 +33,62 @@ class PeopleService
 
     public function getTable(): Builder
     {
-        return People::select(
-            'people.id',
+        return Patient::select(
+            'patients.id',
+            'patients.name',
+            'patients.people_id',
+            'people.cns',
             'people.mother_name',
-            'people.birth_date',
-            'people.name'
-        );
+            'people.birth_date'
+        )
+            ->join('people', 'people.id', 'patients.people_id')
+            ->offset($this->offset)
+            ->limit($this->length);
     }
 
     public function getPatient(string $cpf): array
     {
-        $people = $this->getTable();
+        $patients = $this->getTable();
 
-        return $people->where('cpf', preg_replace("/\D+/", '', $cpf))->get()->toArray();
+        return $patients->where('cpf', preg_replace("/\D+/", '', $cpf))->get()->toArray();
     }
 
     public function index(): array
     {
-        $people = $this->getTable();
+        $patients = $this->getTable();
 
-        $columns = [
-            'name' => 'Nome',
-            'mother_name' => 'Nome da Mãe',
-            'birth_date' => 'Data de Nascimento'
-        ];
-
-        return [
-            'data' => $people->get()->toArray(),
-            'columns' => $columns,
-            'prefix' => 'people'
-        ];
+        return $this->tableReturn($patients, 'patients');
     }
 
-    public function search($search): array
+    public function search(string $search): array
     {
-        $people = $this->getTable();
+        $patients = $this->getTable();
 
         if ($search) {
             if (str_contains($search, '/') && strlen($search) == 10) {
-                $people = $people->where('people.birth_date', Carbon::createFromFormat('d/m/Y', $search)->format('Y-m-d'));
+                $patients->where('people.birth_date', Carbon::createFromFormat('d/m/Y', $search)->format('Y-m-d'));
             }
 
             if (is_string($search)) {
-                $people = $people->where('people.mother_name', 'like', "%$search%")
-                                    ->orWhere('people.name', 'like', "%$search%");
+                $patients->where('people.mother_name', 'like', "%($search)%")
+                                    ->orWhere('patients.name', 'like', "%$search%");
+            }
+
+            if (is_numeric($search)) {
+                $patients->where('people.cns', $this->removeMask($search));
             }
         }
 
-        $columns = [
-            'name' => 'Nome',
-            'mother_name' => 'Nome da Mãe',
-            'birth_date' => 'Data de Nascimento'
-        ];
+        return $this->tableReturn($patients, 'patients');
+    }
 
-        return [
-            'data' => $people->get()->toArray(),
-            'columns' => $columns,
-            'url' => route('pessoa.search')
-        ];
+    public function paginate(int $length): array
+    {
+        $this->length = $length;
+
+        $patients = $this->getTable();
+
+        return $this->tableReturn($patients, 'patients');
     }
 
     public function create(): array
@@ -94,7 +100,7 @@ class PeopleService
         ];
     }
 
-    public function store(array $data)
+    public function store(array $data): array
     {
         try {
 
@@ -107,6 +113,10 @@ class PeopleService
             $people->save();
 
             $data['people_id'] = $people->id;
+
+            $patient = new Patient();
+            $patient->fill($data);
+            $patient->save();
 
             $address = new Address();
             $address->fill($data);
@@ -124,7 +134,7 @@ class PeopleService
 
             DB::commit();
 
-            return ['title' => 'Sucesso!', 'msg' => 'Sucesso ao cadastrar pessoa', 'type' => 'success', 'route' => route('people.index')];
+            return ['title' => 'Sucesso!', 'msg' => 'Sucesso ao cadastrar pessoa', 'type' => 'success', 'route' => route('patients.index')];
 
         } catch (Exception $e) {
 
@@ -138,7 +148,7 @@ class PeopleService
     public function show(int $id): array
     {
         $dependencies = $this->create();
-        $dependencies['people'] = People::find($id);
+        $dependencies['patient'] = Patient::find($id);
         $dependencies['visualize'] = true;
 
         return $dependencies;
@@ -147,12 +157,12 @@ class PeopleService
     public function edit($id): array
     {
         $dependencies = $this->create();
-        $dependencies['people'] = People::find($id);
+        $dependencies['patient'] = Patient::find($id);
 
         return $dependencies;
     }
 
-    public function update(array $data, $id)
+    public function update(array $data, int $id): array
     {
         try {
 
@@ -160,17 +170,15 @@ class PeopleService
 
             isset($data['father_unknown']) ? $data['father_unknown'] = $data['father_unknown'] == 'on' ?: false : null;
 
-            $people = People::find($id);
-            $people->update($data);
-            $people->save();
-
-            $address = Address::where('people_id', $id)->first();
-            $address->update($data);
-            $address->save();
+            $patient = Patient::findOrFail($id);
+            $patient->people->update($data);
+            $patient->people->address->update($data);
+            $patient->update($data);
+            $patient->save();
 
             if (isset($data['contact'][0]) && ($data['contact'][0] || $data['contact'][1] || $data['contact'][3]))
             {
-                $result = $this->contactService->update($data, $people->id);
+                $result = $this->contactService->update($data, $patient->people_id);
 
                 if ($result['type'] == 'error')
                 {
@@ -180,7 +188,7 @@ class PeopleService
 
             DB::commit();
 
-            return ['title' => 'Sucesso!', 'msg' => 'Sucesso ao atualizar pessoa', 'type' => 'success', 'route' => route('people.index')];
+            return ['title' => 'Sucesso!', 'msg' => 'Sucesso ao atualizar pessoa', 'type' => 'success', 'route' => route('patients.index')];
 
         } catch (Exception $e) {
 
@@ -191,12 +199,12 @@ class PeopleService
         }
     }
 
-    public function destroy($id)
+    public function destroy(int $id): array
     {
         try {
             DB::beginTransaction();
 
-            People::find($id)->delete();
+            Patient::findOrFail($id)->delete();
 
             DB::commit();
 
